@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -16,8 +17,12 @@ class PostController extends Controller
      */
     public function index()
     {
+        $route = Route::getCurrentRoute()->uri;
         $posts = Post::latest()->get();
-        return view('admin.posts.index', ['posts' => $posts]);
+
+        if($route === "postsList") return view('postsList', ['posts' => $posts]);
+        else return view('admin.posts.index', ['posts' => $posts]);
+        
     }
 
     /**
@@ -40,7 +45,7 @@ class PostController extends Controller
     {
         $post = new Post;
         $post->title = $request->title;
-        $post->slug = Str::slug($request->title);
+        $post->slug = Str::slug($request->title, "-");
         $post->description = $request->description;
         $post->save();
 
@@ -55,9 +60,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug, $id)
     {
-        //
+        $value = Post::find($id);
+        return view('pages.show', compact("value"));
     }
 
     /**
@@ -68,7 +74,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $value = Post::find($id);
+        return view('admin.posts.create', compact("value"));
     }
 
     /**
@@ -80,7 +87,16 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $update = Post::find($id);
+
+        $update->title = $request->get('title');
+        $update->slug = Str::slug($request->get('title'), "-");
+        $update->description = $request->get('description');
+        $update->save();
+
+        session()->flash('success', "L'article a bien été modifié");
+
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -91,6 +107,11 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::where('id', $id);
+        $post->delete();
+
+        session()->flash('success', "L'article a bien été supprimé");
+
+        return redirect()->route('posts.index');
     }
 }
