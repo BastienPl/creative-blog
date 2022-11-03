@@ -21,6 +21,7 @@ Route::get('/', [PageController::class, 'home']);
 
 Route::get('/posts', [AdminPostController::class, 'index'])->name('posts.index');
 Route::get('/posts/create', [AdminPostController::class, 'create'])->name('posts.create');
+Route::post('/posts/store', [AdminPostController::class, 'store'])->name('posts.store');
 
 // Route::get('/', function () {
 //     return view('welcome');
