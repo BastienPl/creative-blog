@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -20,8 +21,9 @@ class PostController extends Controller
     {
         $route = Route::getCurrentRoute()->uri;
         $posts = Post::latest()->get();
+        $categories = Category::all();
 
-        return view('admin.posts.index', ['posts' => $posts]);
+        return view('admin.posts.index', compact('posts', 'categories'));
         
     }
 
@@ -42,7 +44,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**

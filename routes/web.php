@@ -5,6 +5,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\PanelController as AdminPanelController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +27,8 @@ Route::get('/posts/show/{id}-{slug}', [PostController::class, 'show'])->name('pa
 Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'as' => 'admin.'], function()
 {
     Route::get('panel', [AdminPanelController::class, 'index'])->name('panel');
-    
+ 
+    // POST  ----------------------------------------------------
     // Affichage de la liste des postes avec boutons admin
     Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
 
@@ -42,6 +44,26 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'as' => 'admin.'], fu
         // update => id
     Route::get('posts/{value}/edit', [AdminPostController::class, 'edit'])->name('posts.edit');
     Route::put('posts/{update}', [AdminPostController::class, 'update'])->name('posts.update');
+
+
+
+
+    // CATEGORY  ----------------------------------------------------
+    // Affichage de la liste des categoris avec boutons admin
+    Route::get('categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+
+    // Création des catégories
+    Route::get('categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
+    Route::post('categories/store', [AdminCategoryController::class, 'store'])->name('categories.store');
+
+    // Suppression des articles
+    Route::delete('categories/destroy/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
+
+    // Modification des articles
+    // value  => id
+    // update => id
+    Route::get('categories/{value}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('categories/{update}', [AdminCategoryController::class, 'update'])->name('categories.update');
 });
 
 

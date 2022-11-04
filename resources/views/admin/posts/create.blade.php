@@ -9,7 +9,7 @@
     </p>
     @endforeach
 @endif
-
+{{ dump($categories) }}
 @if (isset($value))
     <h1><center>Modifier un article</center></h1>
 @else
