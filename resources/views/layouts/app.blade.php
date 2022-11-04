@@ -16,18 +16,18 @@
                 <span class="fs-4">Blog <img class="d-inline-block mb-3" src="https://www.creative-formation.fr/wp-content/themes/creative-formation/assets/lettre-creative.svg" alt="Le C du logo Créative Formation" style="width: 30px">réative</span>
             </a>
             <ul class="nav nav-pills">
-                <li class="nav-item active"><a href="/" class="nav-link active" id="accueil">Accueil</a></li>
+                <li class="nav-item"><a href="/" class="nav-link active mr-1" id="accueil">Accueil</a></li>
                 @auth
-                    <li class="nav-item"><a href="/admin/posts" class="nav-link">Admin</a></li>
+                    <li class="nav-item"><a href="/admin/panel" class="nav-link mr-1">Admin</a></li>
                 @endauth
                 @if (Route::has('login'))
                     @auth
-                        <li>
+                        <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <a href="route('logout')"
                                         onclick="event.preventDefault();
-                                        this.closest('form').submit();" class="nav-link">
+                                        this.closest('form').submit();" class="nav-link mr-1">
                                     {{ 'Se Déconnecter' }}
                                 </a>
                             </form>

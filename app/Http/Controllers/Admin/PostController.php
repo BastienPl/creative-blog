@@ -26,6 +26,16 @@ class PostController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function panel()
+    {
+        return view('admin.posts.panel');
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -43,11 +53,14 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
+        
         $post = new Post;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, "-");
         $post->description = $request->description;
+        $post->isPublished = isset($request->isPublished) ? 1 : 0;
         $post->save();
+        
 
         session()->flash('success', "L'article a bien été enregistré");
 
@@ -88,11 +101,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $update)
+    public function update(PostRequest $request, Post $update)
     {
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
+        $update->isPublished = isset($request->isPublished) ? 1 : 0;
         $update->save();
 
         session()->flash('success', "L'article a bien été modifié");
@@ -111,6 +125,7 @@ class PostController extends Controller
         $post = Post::query()
             ->where('id', $request->id)
             ->firstOrFail();
+            
         $post->delete();
 
         session()->flash('success', "L'article a bien été supprimé");

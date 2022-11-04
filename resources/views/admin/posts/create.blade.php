@@ -33,8 +33,12 @@
         <label for="ContentArticle" class="form-label">Contenu de l'article</label>
         <textarea class="form-control" name="description" id="FormControlContentArticle" rows="3">{{ isset($value->description) ? $value->description : old('description') }}</textarea>
     </div>
+    <div class="mb-3">
+        <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" name='isPublished' {{ (isset($value) && $value->isPublished) ? "checked" : " "}}>
+        <label class="btn btn-outline-success" for="btn-check-outlined">En Ligne</label>
+    </div>
     <button type="submit" class="btn btn-primary">Envoyer</button>
-    <a href='{{ route('posts.index') }}' class="btn btn-danger">Retour</a>
+    <a href='{{ route('admin.posts.index') }}' class="btn btn-danger">Retour</a>
 </form>
 
 @endsection

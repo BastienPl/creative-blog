@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\PanelController as AdminPanelController;
 use App\Http\Controllers\Admin\PostController;
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,8 @@ Route::get('/posts/show/{id}-{slug}', [PostController::class, 'show'])->name('pa
 // --------- ADMIN --------- //
 Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'as' => 'admin.'], function()
 {
+    Route::get('panel', [AdminPanelController::class, 'index'])->name('panel');
+    
     // Affichage de la liste des postes avec boutons admin
     Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
 
