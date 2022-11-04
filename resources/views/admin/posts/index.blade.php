@@ -10,7 +10,7 @@
 
     <h2 class="mb-4">Administration des articles : </h2> 
     <p>
-        <button onclick="location.href='{{ route('posts.create') }}'" class="btn btn-outline-primary">Ajouter un Article</button>
+        <button onclick="location.href='{{ route('admin.posts.create') }}'" class="btn btn-outline-primary">Ajouter un Article</button>
     </p>
 
     @if (!$posts->isEmpty())
@@ -27,10 +27,11 @@
                     </div>
                     <small class="opacity-50 text-nowrap">Le {{ $post->created_at }}</small>
                 </div>
-                <button onclick="location.href='{{ route('posts.edit', $post->id)}}'" class="btn btn-outline-info">Modifier</button>
-                <form action="{{ route('posts.destroy', ['id' => $post->id]) }}" method="POST">
+                <button onclick="location.href='{{ route('admin.posts.edit', $post->id)}}'" class="btn btn-outline-info">Modifier</button>
+                <form action="{{ route('admin.posts.destroy', ['id' => $post->id]) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-outline-danger">╳</button>
+                    @method('delete')
+                    <button type="submit" class="btn btn-outline-danger" onclick="confirm('Êtes-vous sur de vouloir supprimer le l\'article ?')">╳</button>
                 </form>
             </a>
 

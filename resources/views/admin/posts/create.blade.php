@@ -2,12 +2,29 @@
 
 @section('content')
 
-<p>
-    <button onclick="location.href='{{ URL::previous() }}'" class="btn btn-danger">Retour</button>
-</p>
+@if (count($errors) > 0)
+    @foreach ($errors->all() as $error)
+    <p class="alert alert-danger alert-dismissible fade show" id="formMessage" role="alert">
+        {{ $error }}
+    </p>
+    @endforeach
+@endif
 
-<form name="add-blog-post-form" id="add-blog-post-form" method="POST" action="{{ isset($value->id) ? route('posts.update', $value->id) : route('posts.store') }}">
+@if (isset($value))
+    <h1><center>Modifier un article</center></h1>
+@else
+    <h1><center>Ajouter un article</center></h1>
+@endif
+<br>
+<form name="add-blog-post-form" id="add-blog-post-form" method="POST" action="{{ isset($value->id) ? route('admin.posts.update', $value->id) : route('admin.posts.store') }}">
     @csrf
+
+    @if (isset($value->id))
+        @method("put")
+    @else
+        @method("post")
+    @endif
+
     <div class="mb-3">
         <label for="ArticleTitle" class="form-label">Titre de l'article</label>
         <input value="{{ isset($value->title) ? $value->title : old('title') }}" type="title" name="title" class="form-control" id="ArticleTitle" aria-describedby="ArticleTitle">
@@ -17,6 +34,7 @@
         <textarea class="form-control" name="description" id="FormControlContentArticle" rows="3">{{ isset($value->description) ? $value->description : old('description') }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Envoyer</button>
+    <a href='{{ route('posts.index') }}' class="btn btn-danger">Retour</a>
 </form>
 
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -20,8 +21,7 @@ class PostController extends Controller
         $route = Route::getCurrentRoute()->uri;
         $posts = Post::latest()->get();
 
-        if($route === "postsList") return view('postsList', ['posts' => $posts]);
-        else return view('admin.posts.index', ['posts' => $posts]);
+        return view('admin.posts.index', ['posts' => $posts]);
         
     }
 
@@ -41,7 +41,7 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         $post = new Post;
         $post->title = $request->title;
@@ -51,7 +51,7 @@ class PostController extends Controller
 
         session()->flash('success', "L'article a bien été enregistré");
 
-        return redirect()->route('posts.index');
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -60,21 +60,24 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($slug, $id)
+    public function show(Request $request)
     {
-        $value = Post::find($id);
-        return view('pages.show', compact("value"));
+        $post = Post::query()
+            ->where('id', $request->id)
+            ->where('slug', $request->slug)
+            ->firstOrFail();
+
+        return view('pages.show', compact("post"));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $value
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $value)
     {
-        $value = Post::find($id);
         return view('admin.posts.create', compact("value"));
     }
 
@@ -85,10 +88,8 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $update)
     {
-        $update = Post::find($id);
-
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
@@ -96,7 +97,7 @@ class PostController extends Controller
 
         session()->flash('success', "L'article a bien été modifié");
 
-        return redirect()->route('posts.index');
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -105,13 +106,15 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $post = Post::where('id', $id);
+        $post = Post::query()
+            ->where('id', $request->id)
+            ->firstOrFail();
         $post->delete();
 
         session()->flash('success', "L'article a bien été supprimé");
 
-        return redirect()->route('posts.index');
+        return redirect()->route('admin.posts.index');
     }
 }

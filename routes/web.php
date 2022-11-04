@@ -15,24 +15,32 @@ use App\Http\Controllers\Admin\PostController;
 |
 */
 
-Route::get('/hello-creative', fn() => view('hello-creative'));
-
+// Affichage des articles
 Route::get('/', [PageController::class, 'home']);
-
-Route::get('/posts/show/{slug}-{id}', [PostController::class, 'show'])->name('pages.show');
-
-// Route::get('postsList', [PostController::class, 'index'])->name('posts.postsList');
+// Affichage des détails articles 
+Route::get('/posts/show/{id}-{slug}', [PostController::class, 'show'])->name('pages.show');
 
 
 // --------- ADMIN --------- //
-Route::get('admin/posts', [AdminPostController::class, 'index'])->name('posts.index');
-Route::get('admin/posts/create', [AdminPostController::class, 'create'])->name('posts.create');
-Route::post('admin/posts/store', [AdminPostController::class, 'store'])->name('posts.store');
+Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'as' => 'admin.'], function()
+{
+    // Affichage de la liste des postes avec boutons admin
+    Route::get('posts', [AdminPostController::class, 'index'])->name('posts.index');
 
-Route::post('admin/posts/destroy/{id}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
+    // Création des articles 
+    Route::get('posts/create', [AdminPostController::class, 'create'])->name('posts.create');
+    Route::post('posts/store', [AdminPostController::class, 'store'])->name('posts.store');
 
-Route::get('admin/posts/{id}/edit', [AdminPostController::class, 'edit'])->name('posts.edit');
-Route::post('admin/posts/{id}', [AdminPostController::class, 'update'])->name('posts.update');
+    // Suppression des articles
+    Route::delete('posts/destroy/{id}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
+
+    // Modification des articles
+        // value  => id
+        // update => id
+    Route::get('posts/{value}/edit', [AdminPostController::class, 'edit'])->name('posts.edit');
+    Route::put('posts/{update}', [AdminPostController::class, 'update'])->name('posts.update');
+});
+
 
 // Route::get('/', function () {
 //     return view('welcome');

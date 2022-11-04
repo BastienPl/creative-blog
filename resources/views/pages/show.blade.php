@@ -2,10 +2,10 @@
 
 @section('content')
 
-    @if(isset($value))
-        <h1 class="mb-4">{{$value->title}}</h1>
-        ​<p>{{$value->description}}</p>
-        ​<h6>Crée le : {{$value->created_at}}</h6>
+    @if(isset($post))
+        <h1 class="mb-4">{{$post->title}}</h1>
+        ​<p>{{$post->description}}</p>
+        ​<h6>Crée le : {{$post->created_at}}</h6>
     @endif
 
 @endsection
