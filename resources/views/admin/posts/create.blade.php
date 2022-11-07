@@ -34,16 +34,33 @@
     </div>
     <div class="mb-3">
         <label for="CategoryArticle" class="form-label">Catégorie</label>
-        <select id="categoryArticle" name="category_id"class="form-select" aria-label="Default select example">
-            <option></option>
+        <select id="categoryArticle" name="category_id" class="form-select" aria-label="Default select example">
+            <option value=''></option>
             @foreach ($categories as $category)
-                <option value="{{ $category->id }}" {{ isset($value->category_id) == $category->id ? "selected" : " "}}>{{ $category->name }}</option>
+                <option value="{{ $category->id }}"
+                    @if (
+                        (isset($value) && $category->id == old('category_id', $value->category_id)) ||
+                        $category->id == old('category_id')
+                    )
+                        selected
+                    @endif 
+                > 
+                    {{ isset($category->name) ? $category->name : old("name") }}
+                </option>
             @endforeach
         </select>
     </div>
     <div class="mb-3">
-        <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" name='isPublished' {{ (isset($value) && $value->isPublished) ? "checked" : ""}}>
-        <label class="btn btn-outline-success" for="btn-check-outlined">En Ligne</label>
+        <input type="hidden" name="isPublished" value="0">
+        {{-- <input type="checkbox" class="btn-check" id="btn-check-outlined" name='isPublished' {{ (isset($value) && $value->isPublished) ? "checked" : ""}}> --}}
+        <input type="checkbox" class="btn-check" id="isPublished" name='isPublished' value="1" 
+            @if (
+                (isset($value) && old('isPublished', $value->isPublished))
+            )
+                checked
+            @endif 
+        > 
+        <label class="btn btn-outline-success" for="isPublished" >En Ligne</label>
     </div>
     <button type="submit" class="btn btn-primary">Envoyer</button>
     <a href='{{ route('admin.posts.index') }}' class="btn btn-danger">Retour</a>

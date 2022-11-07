@@ -17,6 +17,7 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required',
+            'categoriy_id' => "exists:category",
             'isPublished' => 'in:0,1',
         ];
     }

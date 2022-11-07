@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 */
 
 // Affichage des articles
-Route::get('/', [PageController::class, 'home']);
+Route::get('/', [PageController::class, 'home'])->name('pages.home');
 
 Route::get('/categorie/{id}', [PageController::class, 'filterByCategory'])->name('categorie.home');
 

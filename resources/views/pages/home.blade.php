@@ -19,8 +19,11 @@
     </div>
     @endif
     
-    <h2 class="mb-4" id='lastPost'>Les derniers articles : </h2> 
-    
+    @if(Route::is('pages.home') )
+        <h2 class="mb-4" id='lastPost'>Les derniers articles : </h2>
+    @elseif(Route::is('categorie.home') )
+        <h2 class="mb-4" id='lastPost'>Les derniers articles pour la catégorie : {{ $posts[0]->category->name }} </h2> 
+    @endif
     
     @if (!$posts->isEmpty())
     

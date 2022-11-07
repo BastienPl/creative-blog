@@ -10,7 +10,8 @@ class PageController extends Controller
     
     public function home() {
 
-        $posts = Post::latest()
+        $posts = Post::with('category')
+            ->latest()
             ->where('isPublished', true)
             ->get();
         return view('pages.home', ['posts' => $posts]);
@@ -45,7 +46,7 @@ class PageController extends Controller
         ->where('isPublished', true)
         ->get();
 
-        return view('categorie.home', compact("posts"));
+        return view('pages.home', compact("posts"));
     }
 
 }

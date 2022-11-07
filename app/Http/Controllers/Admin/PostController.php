@@ -62,7 +62,9 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, "-");
         $post->description = $request->description;
-        $post->isPublished = isset($request->isPublished) ? 1 : 0;
+        // $post->isPublished = isset($request->isPublished) ? 1 : 0;
+        $post->isPublished = (bool) $request->isPublished;
+        $post->description = $request->description;
         $post->category_id = $request->category_id;
         $post->save();
         
@@ -96,7 +98,7 @@ class PostController extends Controller
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
-        $update->isPublished = isset($request->isPublished) ? 1 : 0;
+        $update->isPublished = (bool)$request->get("isPublished");
         $update->category_id = $request->category_id;
         $update->save();
 
