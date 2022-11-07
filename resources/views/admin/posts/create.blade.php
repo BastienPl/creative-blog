@@ -15,7 +15,7 @@
     <h1><center>Ajouter un article</center></h1>
 @endif
 <br>
-<form name="add-blog-post-form" id="add-blog-post-form" method="POST" action="{{ isset($value->id) ? route('admin.posts.update', $value->id) : route('admin.posts.store') }}">
+<form name="add-blog-post-form" id="add-blog-post-form" enctype= multipart/form-data method="POST" action="{{ isset($value->id) ? route('admin.posts.update', $value->id) : route('admin.posts.store') }}">
     @csrf
 
     @if (isset($value->id))
@@ -49,6 +49,9 @@
                 </option>
             @endforeach
         </select>
+    </div>
+    <div class="mb-3">
+        <input type="file" name="image_name">
     </div>
     <div class="mb-3">
         <input type="hidden" name="isPublished" value="0">

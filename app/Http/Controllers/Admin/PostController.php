@@ -57,12 +57,18 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
+
         
         $post = new Post;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, "-");
         $post->description = $request->description;
-        // $post->isPublished = isset($request->isPublished) ? 1 : 0;
+        if(isset($request->image_name)) {
+            $image = $request->file('image_name');
+            $imageName = date('mdY').$image->getClientOriginalName();
+            $image -> move(public_path('public/Image'), $imageName);
+            $post->image_name = $imageName;
+        }
         $post->isPublished = (bool) $request->isPublished;
         $post->description = $request->description;
         $post->category_id = $request->category_id;
@@ -98,6 +104,12 @@ class PostController extends Controller
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
+        if(isset($request->image_name)) {
+            $image = $request->file('image_name');
+            $imageName = date('mdY').$image->getClientOriginalName();
+            $image -> move(public_path('images'), $imageName);
+            $update->image_name = $imageName;
+        }
         $update->isPublished = (bool)$request->get("isPublished");
         $update->category_id = $request->category_id;
         $update->save();
@@ -125,4 +137,5 @@ class PostController extends Controller
 
         return redirect()->route('admin.posts.index');
     }
+
 }
