@@ -16,10 +16,10 @@
     <h1><center>Ajouter une catégorie</center></h1>
 @endif
 <br>
-<form name="add-blog-post-form" id="add-blog-post-form" method="POST" action="{{ isset($value->id) ? route('admin.categories.update', $value->id) : route('admin.categories.store') }}">
+<form name="add-blog-post-form" id="add-blog-post-form" method="POST" action="{{ isset($value) ? route('admin.categories.update', $value->id) : route('admin.categories.store') }}">
     @csrf
 
-    @if (isset($value->id))
+    @if (isset($value))
         @method("put")
     @else
         @method("post")

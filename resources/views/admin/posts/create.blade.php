@@ -9,7 +9,6 @@
     </p>
     @endforeach
 @endif
-{{ dump($categories) }}
 @if (isset($value))
     <h1><center>Modifier un article</center></h1>
 @else
@@ -34,7 +33,16 @@
         <textarea class="form-control" name="description" id="FormControlContentArticle" rows="3">{{ isset($value->description) ? $value->description : old('description') }}</textarea>
     </div>
     <div class="mb-3">
-        <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" name='isPublished' {{ (isset($value) && $value->isPublished) ? "checked" : " "}}>
+        <label for="CategoryArticle" class="form-label">Catégorie</label>
+        <select id="categoryArticle" name="category_id"class="form-select" aria-label="Default select example">
+            <option></option>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" {{ isset($value->category_id) == $category->id ? "selected" : " "}}>{{ $category->name }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="mb-3">
+        <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" name='isPublished' {{ (isset($value) && $value->isPublished) ? "checked" : ""}}>
         <label class="btn btn-outline-success" for="btn-check-outlined">En Ligne</label>
     </div>
     <button type="submit" class="btn btn-primary">Envoyer</button>

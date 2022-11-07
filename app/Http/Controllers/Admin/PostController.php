@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -20,10 +21,9 @@ class PostController extends Controller
     public function index()
     {
         $route = Route::getCurrentRoute()->uri;
-        $posts = Post::latest()->get();
-        $categories = Category::all();
+        $posts = Post::with('category')->latest()->get();
 
-        return view('admin.posts.index', compact('posts', 'categories'));
+        return view('admin.posts.index', compact('posts'));
         
     }
 
@@ -45,6 +45,7 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return view('admin.posts.create', compact('categories'));
     }
 
@@ -62,28 +63,13 @@ class PostController extends Controller
         $post->slug = Str::slug($request->title, "-");
         $post->description = $request->description;
         $post->isPublished = isset($request->isPublished) ? 1 : 0;
+        $post->category_id = $request->category_id;
         $post->save();
         
 
         session()->flash('success', "L'article a bien été enregistré");
 
         return redirect()->route('admin.posts.index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request)
-    {
-        $post = Post::query()
-            ->where('id', $request->id)
-            ->where('slug', $request->slug)
-            ->firstOrFail();
-
-        return view('pages.show', compact("post"));
     }
 
     /**
@@ -94,7 +80,8 @@ class PostController extends Controller
      */
     public function edit(Post $value)
     {
-        return view('admin.posts.create', compact("value"));
+        $categories = Category::all();
+        return view('admin.posts.create', compact("value", "categories"));
     }
 
     /**
@@ -110,6 +97,7 @@ class PostController extends Controller
         $update->slug = Str::slug($request->get('title'), "-");
         $update->description = $request->get('description');
         $update->isPublished = isset($request->isPublished) ? 1 : 0;
+        $update->category_id = $request->category_id;
         $update->save();
 
         session()->flash('success', "L'article a bien été modifié");

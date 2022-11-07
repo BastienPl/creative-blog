@@ -19,8 +19,11 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 // Affichage des articles
 Route::get('/', [PageController::class, 'home']);
+
+Route::get('/categorie/{id}', [PageController::class, 'filterByCategory'])->name('categorie.home');
+
 // Affichage des détails articles 
-Route::get('/posts/show/{id}-{slug}', [PostController::class, 'show'])->name('pages.show');
+Route::get('/posts/show/{id}-{slug}', [PageController::class, 'show'])->name('pages.show');
 
 
 // --------- ADMIN --------- //
