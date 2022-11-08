@@ -1,7 +1,9 @@
-import './bootstrap';
+// document.addEventListener('DOMContentLoaded', function() {
+//     document.querySelector("#preview").onchange = function (e) {
+//         preview();
+//     }
+// }, false);
 
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
+// function preview() {
+//     thumb.src=URL.createObjectURL(event.target.files[0]);
+// }

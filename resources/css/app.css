@@ -1,3 +1,21 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
+
+
+.category-badge{
+    position: absolute;
+    right:-20px;
+    top:-20px;
+    text-align: center;
+    color:white;
+    padding:5px 10px;
+    font-size:20px;
+}
+.bg-info-custom{
+    background-color: RGB(63, 166, 168)!important;
+    color: white !important;;
+}
+.card-min-height{
+    min-height: 333px;
+}

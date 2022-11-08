@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
+use Image;
+use File;
+
 class PostController extends Controller
 {
     /**
@@ -58,22 +61,43 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
 
-        
+        dd($request);
+
+
         $post = new Post;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, "-");
         $post->description = $request->description;
         if(isset($request->image_name)) {
+            
             $image = $request->file('image_name');
             $imageName = date('mdY').$image->getClientOriginalName();
-            $image -> move(public_path('public/Image'), $imageName);
+
+            $destinationPathThumbnail = public_path('images/thumbnail');
+            $destinationPathMedium = public_path('images/medium');
+            $img = Image::make($image->getPathName());
+            // Image vignette
+            $img->resize(100, 100, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathThumbnail .'/'.$imageName);
+            $img->resize(500, 500, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathMedium .'/'.$imageName);
+
+            $image -> move(public_path('images'), $imageName);
             $post->image_name = $imageName;
+
         }
         $post->isPublished = (bool) $request->isPublished;
         $post->description = $request->description;
+
+        
         $post->category_id = $request->category_id;
         $post->save();
         
+        if ($request->has('tags')) {
+            $post->tags()->attach($request->tags);
+        }
 
         session()->flash('success', "L'article a bien été enregistré");
 
@@ -103,16 +127,42 @@ class PostController extends Controller
     {
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
+        $update->lead_paragraph = $request->get('lead_paragraph');
         $update->description = $request->get('description');
         if(isset($request->image_name)) {
+
+            if($update->image_name !== null) {
+                File::delete(public_path("images/" . $update->image_name ));
+                File::delete(public_path("images/thumbnail/" . $update->image_name ));
+                File::delete(public_path("images/medium/" . $update->image_name ));
+            }
+            
             $image = $request->file('image_name');
             $imageName = date('mdY').$image->getClientOriginalName();
+
+            $destinationPathThumbnail = public_path('images/thumbnail');
+            $destinationPathMedium = public_path('images/medium');
+            $img_thumbnail = Image::make($image->getPathName());
+            // Image vignette
+            $img_thumbnail->resize(null, 150, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathThumbnail .'/'.$imageName);
+            // Medium
+            $img_medium = Image::make($image->getPathName());
+            $img_medium->resize(500, 500, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathMedium .'/'.$imageName);
+
             $image -> move(public_path('images'), $imageName);
             $update->image_name = $imageName;
         }
         $update->isPublished = (bool)$request->get("isPublished");
         $update->category_id = $request->category_id;
         $update->save();
+
+        if ($request->has('tags')) {
+            $update->tags()->sync($request->tags);
+        }
 
         session()->flash('success', "L'article a bien été modifié");
 
@@ -127,10 +177,17 @@ class PostController extends Controller
      */
     public function destroy(Request $request)
     {
+        
         $post = Post::query()
-            ->where('id', $request->id)
-            ->firstOrFail();
-            
+        ->where('id', $request->id)
+        ->firstOrFail();
+        
+        if($post->image_name !== null) {
+            File::delete(public_path("images/" . $post->image_name ));
+            File::delete(public_path("images/thumbnail/" . $post->image_name ));
+            File::delete(public_path("images/medium/" . $post->image_name ));
+        }
+
         $post->delete();
 
         session()->flash('success', "L'article a bien été supprimé");
