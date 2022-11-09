@@ -16,6 +16,12 @@
     background-color: RGB(63, 166, 168)!important;
     color: white !important;;
 }
+.bg-info-tag{
+    background-color: RGB(12, 79, 110)!important;
+    color: white !important;;
+}
 .card-min-height{
     min-height: 333px;
 }
+
+

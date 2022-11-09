@@ -6,6 +6,9 @@ use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
+use App\Services\TagService;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -16,6 +19,11 @@ use File;
 
 class PostController extends Controller
 {
+
+    public function __construct()
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +32,7 @@ class PostController extends Controller
     public function index()
     {
         $route = Route::getCurrentRoute()->uri;
-        $posts = Post::with('category')->latest()->get();
+        $posts = Post::with('category', 'tags')->latest()->get();
 
         return view('admin.posts.index', compact('posts'));
         
@@ -61,9 +69,9 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
 
-        dd($request);
-
-
+        $tag = New TagService;
+        $tag2 = $tag->storeTag($request);
+        
         $post = new Post;
         $post->title = $request->title;
         $post->slug = Str::slug($request->title, "-");
@@ -91,12 +99,16 @@ class PostController extends Controller
         $post->isPublished = (bool) $request->isPublished;
         $post->description = $request->description;
 
-        
+
         $post->category_id = $request->category_id;
         $post->save();
-        
-        if ($request->has('tags')) {
-            $post->tags()->attach($request->tags);
+
+        $idPost = DB::getPdo()->lastInsertId();
+
+        $insertPostTag = $tag->storePivot($idPost, $tag2);
+
+        if (isset($request->tags)) {
+            $post->tags()->sync($insertPostTag);
         }
 
         session()->flash('success', "L'article a bien été enregistré");
@@ -113,7 +125,11 @@ class PostController extends Controller
     public function edit(Post $value)
     {
         $categories = Category::all();
-        return view('admin.posts.create', compact("value", "categories"));
+        $tags = Tag::with(['posts'])
+            ->latest()
+            ->get();
+
+        return view('admin.posts.create', compact("value", "categories", "tags"));
     }
 
     /**
@@ -125,6 +141,9 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $update)
     {
+        $tag = New TagService;
+        $tag2 = $tag->storeTag($request);
+
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
         $update->lead_paragraph = $request->get('lead_paragraph');
@@ -159,9 +178,13 @@ class PostController extends Controller
         $update->isPublished = (bool)$request->get("isPublished");
         $update->category_id = $request->category_id;
         $update->save();
+    
+        $idPost = $update->id;
+
+        $insertPostTag = $tag->storePivot($idPost, $tag2);
 
         if ($request->has('tags')) {
-            $update->tags()->sync($request->tags);
+            $update->tags()->sync($insertPostTag);
         }
 
         session()->flash('success', "L'article a bien été modifié");

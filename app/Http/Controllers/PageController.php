@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Post;
+use App\Models\Tag;
 
 use Illuminate\Http\Request;
 
@@ -10,11 +11,13 @@ class PageController extends Controller
     
     public function home() {
 
-        $posts = Post::with('category')
+        $posts = Post::with(['category', 'tags'])
             ->latest()
             ->where('isPublished', true)
             ->get();
-        return view('pages.home', ['posts' => $posts]);
+
+        // $tags = Tag::query()->all();
+        return view('pages.home', compact('posts'));
 
         // return view('pages.home', ['posts' => collect()]);
 

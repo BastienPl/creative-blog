@@ -30,7 +30,7 @@
         <div class="row">
 
             @foreach ($posts as $post)
-            
+
                 <div class="col-12 col-sm-6 col-md-3 col-lg-3">
                     
                     <div class="card mb-4 bg-light card-min-height">
@@ -48,6 +48,15 @@
                             <div class="text-center">
                                 <a href="{{route('pages.show', ['slug' =>$post->slug, 'id' => $post->id])}}" class="btn bg-info-custom">Voir l'article</a>
                             </div>
+                            @if(isset($post->tags)) 
+                                <div class="text-left mt-2"> Tag :
+                                    @foreach ($post->tags as $tag)
+                                        <span class="badge bg-info bg-info-tag mt-1">{{ Str::upper($tag->name) }}</span>
+                                    @endforeach
+                                </div> 
+                            @else
+                                <div class="text-left mt-2"></div> 
+                            @endif 
                         </div>
                         <div class="card-footer text-muted">
                             <small class="opacity-50 text-nowrap">Crée le {{ $post->created_at->format('d/m/Y') }}</small>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\PanelController as AdminPanelController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\TagController as AdminTagController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,6 +68,26 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'as' => 'admin.'], fu
     // update => id
     Route::get('categories/{value}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
     Route::put('categories/{update}', [AdminCategoryController::class, 'update'])->name('categories.update');
+
+
+    
+    // TAG  ----------------------------------------------------
+    // Affichage de la liste des categoris avec boutons admin
+    Route::get('tags', [AdminTagController::class, 'index'])->name('tags.index');
+
+    // Création des catégories
+    Route::get('tags/create', [AdminTagController::class, 'create'])->name('tags.create');
+    Route::post('tags/store', [AdminTagController::class, 'store'])->name('tags.store');
+
+    // Suppression des articles
+    Route::delete('tags/destroy/{id}', [AdminTagController::class, 'destroy'])->name('tags.destroy');
+
+    // Modification des articles
+    // value  => id
+    // update => id
+    Route::get('tags/{value}/edit', [AdminTagController::class, 'edit'])->name('tags.edit');
+    Route::put('tags/{update}', [AdminTagController::class, 'update'])->name('tags.update');
+
 });
 
 

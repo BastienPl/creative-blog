@@ -38,7 +38,19 @@
         </div>
         <div class="mb-3">
             <label for="TagArticle" class="form-label">Tag</label>
-            <input type="text" class="form-control" name="tags" id="FormControlTagArticle" rows="3"></textarea>
+            {{-- @foreach($tags as $tag) @if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) {{ $tag->name.";" }} @endif @endforeach --}}
+            <?php
+                $tagValue = "";
+                if(isset($tags)) {
+
+                    foreach($tags as $tag){
+                        if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) {
+                            $tagValue .= $tag->name.";";
+                        }
+                    }
+                }
+            ?>
+            <input type="text" class="form-control" name="tags" id="FormControlTagArticle" rows="3" value="{{ isset($tagValue) ? trim($tagValue) : "" }}">
         </div>
         <div class="mb-3">
             <label for="CategoryArticle" class="form-label">Catégorie</label>
