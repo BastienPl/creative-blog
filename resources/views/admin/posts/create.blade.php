@@ -40,17 +40,24 @@
             <label for="TagArticle" class="form-label">Tag</label>
             {{-- @foreach($tags as $tag) @if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) {{ $tag->name.";" }} @endif @endforeach --}}
             <?php
-                $tagValue = "";
-                if(isset($tags)) {
+                // $tagValue = "";
+                // if(isset($tags)) {
 
-                    foreach($tags as $tag){
-                        if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) {
-                            $tagValue .= $tag->name.";";
-                        }
-                    }
-                }
+                //     foreach($tags as $tag){
+                //         if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) {
+                //             $tagValue .= $tag->name.";";
+                //         }
+                //     }
+                // }
             ?>
-            <input type="text" class="form-control" name="tags" id="FormControlTagArticle" rows="3" value="{{ isset($tagValue) ? trim($tagValue) : "" }}">
+            {{-- <input type="text" class="form-control" name="tags" id="FormControlTagArticle" rows="3" value="{{ isset($tagValue) ? trim($tagValue) : "" }}"> --}}
+            <select class="form-select" multiple aria-label="multiple select example">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+       
         </div>
         <div class="mb-3">
             <label for="CategoryArticle" class="form-label">Catégorie</label>
@@ -75,6 +82,8 @@
                 <img src="/images/thumbnail/{{ $value->image_name }}" alt="">
             </div>
         @endif
+
+
 
         <div class="mb-3">
             <label for="formFile" class="form-label">Insérer une image</label>
