@@ -29,13 +29,29 @@
                             @else 
                                 <p class="text-nowrap"> Catégorie : </p>  
                             @endif 
+                            @if(isset($post->tags)) 
+                                <p class="text-nowrap"> Tag : 
+                                    @foreach ($post->tags as $tag)
+                                        <span class='badge bg-dark'> {{ Str::upper($tag->name) }} </span>
+                                    @endforeach
+                                </p>
+                            @else
+                                <p class="text-nowrap"></p>  
+                            @endif 
                             <div class="d-flex align-content-end flex-wrap">
                                 <span class="badge badge-pill bg-{{ $post->isPublished == 1 ? "success" : "secondary" }}">{{ $post->isPublished == 1 ? "En Ligne" : "Hors Ligne" }}</span>
                             </div>
                         </div>
                         <div>
-                        <p class="opacity-50 text-nowrap">Le {{ $post->created_at->format('d/m/Y') }}</p>
-                    </div>
+                            @if(isset($post->image_name)) 
+                                <img src="/images/thumbnail/{{ $post->image_name }}" alt="">
+                            @else 
+                                <p class="text-nowrap"></p>  
+                            @endif 
+                        </div>
+                        <div>
+                            <p class="opacity-50 text-nowrap">Le {{ $post->created_at->format('d/m/Y') }}</p>
+                        </div>
                     </div>
                     <span><a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-outline-info"><i class="bi bi-brush-fill"></i></a></span>
                     <form action="{{ route('admin.posts.destroy', ['id' => $post->id]) }}" method="POST">

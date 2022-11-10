@@ -52,4 +52,16 @@ class PageController extends Controller
         return view('pages.home', compact("posts"));
     }
 
+    public function filterByTag(Tag $tag)
+    {
+        $posts = $tag
+        ->posts()
+        ->with('tags')
+        ->latest()
+        ->where('isPublished', true)
+        ->get();
+
+        return view('pages.home', compact("posts", "tag"));
+    }
+
 }

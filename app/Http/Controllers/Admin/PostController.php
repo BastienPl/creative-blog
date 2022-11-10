@@ -56,8 +56,9 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
 
-        return view('admin.posts.create', compact('categories'));
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -69,8 +70,8 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
 
-        $tag = New TagService;
-        $tag2 = $tag->storeTag($request);
+        // $tag = New TagService;
+        // $tag2 = $tag->storeTag($request);
         
         $post = new Post;
         $post->title = $request->title;
@@ -103,12 +104,12 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->save();
 
-        $idPost = DB::getPdo()->lastInsertId();
+        // $idPost = DB::getPdo()->lastInsertId();
 
-        $insertPostTag = $tag->storePivot($idPost, $tag2);
+        // $insertPostTag = $tag->storePivot($idPost, $tag2);
 
         if (isset($request->tags)) {
-            $post->tags()->sync($insertPostTag);
+            $post->tags()->sync($request->tags);
         }
 
         session()->flash('success', "L'article a bien été enregistré");
@@ -125,9 +126,7 @@ class PostController extends Controller
     public function edit(Post $value)
     {
         $categories = Category::all();
-        $tags = Tag::with(['posts'])
-            ->latest()
-            ->get();
+        $tags = Tag::all();
 
         return view('admin.posts.create', compact("value", "categories", "tags"));
     }
@@ -141,8 +140,8 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $update)
     {
-        $tag = New TagService;
-        $tag2 = $tag->storeTag($request);
+        // $tag = New TagService;
+        // $tag2 = $tag->storeTag($request);
 
         $update->title = $request->get('title');
         $update->slug = Str::slug($request->get('title'), "-");
@@ -179,12 +178,12 @@ class PostController extends Controller
         $update->category_id = $request->category_id;
         $update->save();
     
-        $idPost = $update->id;
+        // $idPost = $update->id;
 
-        $insertPostTag = $tag->storePivot($idPost, $tag2);
+        // $insertPostTag = $tag->storePivot($idPost, $tag2);
 
         if ($request->has('tags')) {
-            $update->tags()->sync($insertPostTag);
+            $update->tags()->sync($request->tags);
         }
 
         session()->flash('success', "L'article a bien été modifié");

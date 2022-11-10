@@ -41,21 +41,28 @@
             {{-- @foreach($tags as $tag) @if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) {{ $tag->name.";" }} @endif @endforeach --}}
             <?php
                 // $tagValue = "";
+                // $tagId = 0;
                 // if(isset($tags)) {
 
                 //     foreach($tags as $tag){
                 //         if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) {
-                //             $tagValue .= $tag->name.";";
+                //             $tagValue = $tag->name;
+                //             $tagId = $tag->id;
                 //         }
                 //     }
                 // }
             ?>
             {{-- <input type="text" class="form-control" name="tags" id="FormControlTagArticle" rows="3" value="{{ isset($tagValue) ? trim($tagValue) : "" }}"> --}}
-            <select class="form-select" multiple aria-label="multiple select example">
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+            <select class="form-select" multiple name='tags[]' aria-label="multiple select example" id='TagArticle'>
+                @if (!isset($value))
+                    @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}" @if(in_array($tag->id, old('tags', []))) selected @endif>{{ $tag->name }}</option>
+                    @endforeach
+                @else
+                    @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}" @if(in_array($tag->id, old('tags', $value->tags->pluck('id')->toArray()))) selected @endif>{{ $tag->name }}</option>
+                    @endforeach
+                @endif
             </select>
        
         </div>

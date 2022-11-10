@@ -21,7 +21,11 @@ use App\Http\Controllers\Admin\TagController as AdminTagController;
 // Affichage des articles
 Route::get('/', [PageController::class, 'home'])->name('pages.home');
 
+// Trie par catégorie
 Route::get('/categorie/{id}', [PageController::class, 'filterByCategory'])->name('categorie.home');
+
+// Trie par tag
+Route::get('/tag/{tag}', [PageController::class, 'filterByTag'])->name('tag.home');
 
 // Affichage des détails articles 
 Route::get('/posts/show/{id}-{slug}', [PageController::class, 'show'])->name('pages.show');
